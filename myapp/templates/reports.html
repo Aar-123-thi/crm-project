@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | ClientSphere</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<nav>
+    <h2>ClientSphere</h2>
+    <ul>
+        <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a></li>
+        <li><a href="{% url 'customers' %}"><i class="fa-solid fa-users"></i> <span>Customers</span></a></li>
+        <li><a href="{% url 'leads' %}"><i class="fa-solid fa-gem"></i> <span>Leads</span></a></li>
+        <li><a href="{% url 'purchases' %}"><i class="fa-solid fa-scroll"></i> <span>Purchases</span></a></li>
+        <li><a href="{% url 'reports' %}" class="active-link"><i class="fa-solid fa-chart-pie"></i> <span>Reports</span></a></li>
+        <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user-tie"></i> <span>Profile</span></a></li>
+        <li>
+            <form method="post" action="{% url 'logout' %}" style="width: 100%;">
+                {% csrf_token %}
+                <button type="submit"><i class="fa-solid fa-power-off"></i> <span>Logout</span></button>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<main>
+    <section class="hero-banner">
+        <header>
+            <h1>Analytical Insights</h1>
+        </header>
+    </section>
+
+    <div class="content-container">
+        <div class="dashboard-row">
+
+            <div class="card">
+                <h4>CRM Overview</h4>
+                <canvas id="crmChart"></canvas>
+            </div>
+
+            <div class="card">
+                <h4>Lead Distribution</h4>
+                <canvas id="leadChart"></canvas>
+            </div>
+
+            <div class="card full-width">
+                <h4>Summary Report</h4>
+                <div style="overflow-x: auto;">
+                    <table class="summary-table">
+                        <thead>
+                            <tr>
+                                <th>Metric Description</th>
+                                <th style="text-align: right;">Current Tallies</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Total Registered Customers</td>
+                                <td style="text-align: right;" class="metric-value">{{ total_customers|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>Active Market Leads</td>
+                                <td style="text-align: right;" class="metric-value">{{ total_leads|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>Total Successful Purchases</td>
+                                <td style="text-align: right;" class="metric-value">{{ total_purchases|default:"0" }}</td>
+                            </tr>
+                            <tr>
+                                <td>Gross Accumulated Revenue</td>
+                                <td style="text-align: right;" class="metric-value">₹{{ total_revenue|default:"0" }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<script type="application/json" id="crm-data">
+    [{{ total_customers|default:0 }}, {{ total_leads|default:0 }}, {{ total_purchases|default:0 }}]
+</script>
+
+<script type="application/json" id="lead-data">
+    [{{ leads_new|default:0 }}, {{ leads_contacted|default:0 }}, {{ leads_converted|default:0 }}]
+</script>
+
+<script>
+    const crmData = JSON.parse(document.getElementById('crm-data').textContent);
+    const leadData = JSON.parse(document.getElementById('lead-data').textContent);
+
+    Chart.defaults.font.family = "'Montserrat', sans-serif";
+    Chart.defaults.color = "#3d2b1f";
+
+    new Chart(document.getElementById('crmChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Customers', 'Leads', 'Purchases'],
+            datasets: [{
+                data: crmData,
+                backgroundColor: '#c5a059',
+                borderColor: '#2c1e14',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: { 
+                y: { beginAtZero: true, grid: { color: 'rgba(0,0,0,0.05)' } },
+                x: { grid: { display: false } }
+            }
+        }
+    });
+
+    new Chart(document.getElementById('leadChart'), {
+        type: 'pie',
+        data: {
+            labels: ['New', 'Contacted', 'Converted'],
+            datasets: [{
+                data: leadData,
+                backgroundColor: ['#c5a059', '#2c1e14', '#5e483a'],
+                borderWidth: 2,
+                borderColor: '#ffffff'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: { position: 'bottom', labels: { boxWidth: 12, padding: 10 } }
+            }
+        }
+    });
+</script>
+
+</body>
+</html>

@@ -1,0 +1,221 @@
+:root {
+    --bg-color: #f4eee0;
+    --text-dark: #3d2b1f;
+    --accent-gold: #c5a367;
+    --border-color: #d1c7bc;
+    --paper-texture: url('https://www.transparenttextures.com/patterns/papyru-vague.png');
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    background-image: url('https://www.transparenttextures.com/patterns/paper-fibers.png');
+    color: var(--text-dark);
+    font-family: 'Montserrat', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-wrapper {
+    width: 100%;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.archive-card {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    max-width: 1000px;
+    background: #fffdf9;
+    box-shadow: 0 30px 60px rgba(0, 0, 0, 0.12);
+    position: relative;
+    z-index: 5;
+    animation: fadeInUp 1s ease-out;
+    overflow: hidden;
+    /* Keeps children inside rounded corners if added */
+}
+
+/* Left side: The "Mood" side */
+.archive-visual {
+    background: var(--text-dark);
+    padding: 60px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    color: var(--bg-color);
+    position: relative;
+    overflow: hidden;
+}
+
+.archive-visual::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: url('https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1073&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.15;
+    filter: grayscale(100%);
+}
+
+/* Right side: The Form */
+.archive-form-area {
+    padding: 60px;
+    border-left: 1px solid var(--border-color);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.form-header {
+    margin-bottom: 30px;
+}
+
+.brand-small {
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--accent-gold);
+    margin-bottom: 10px;
+    display: block;
+}
+
+h2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(32px, 5vw, 48px);
+    /* Fluid typography */
+    font-weight: 500;
+    line-height: 1.1;
+}
+
+/* Target Django's {{ form.as_p }} elements */
+.input-styling-container p {
+    margin-bottom: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-styling-container label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+    font-weight: 600;
+}
+
+.input-styling-container input {
+    width: 100%;
+    padding: 12px 0;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid var(--border-color);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 20px;
+    color: var(--text-dark);
+    transition: border-color 0.4s;
+    border-radius: 0;
+    /* Prevents iOS default styling */
+}
+
+.input-styling-container input:focus {
+    outline: none;
+    border-bottom-color: var(--accent-gold);
+}
+
+.btn-portal {
+    display: block;
+    width: 100%;
+    padding: 20px;
+    background-color: var(--text-dark);
+    color: var(--bg-color);
+    text-align: center;
+    text-decoration: none;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    border: 1px solid var(--text-dark);
+    cursor: pointer;
+    transition: all 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+    margin-top: 20px;
+}
+
+.btn-portal:hover {
+    background-color: transparent;
+    color: var(--text-dark);
+}
+
+.meta-text {
+    font-size: 10px;
+    letter-spacing: 1px;
+    opacity: 0.5;
+    margin-top: 30px;
+    text-transform: uppercase;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* RESPONSIVE BREAKPOINTS */
+@media (max-width: 900px) {
+    .archive-card {
+        grid-template-columns: 1fr;
+        max-width: 500px;
+    }
+
+    .archive-visual {
+        padding: 40px;
+        min-height: 200px;
+        /* Show some of the visual on tablets */
+    }
+
+    .archive-form-area {
+        padding: 40px;
+        border-left: none;
+        border-top: 1px solid var(--border-color);
+    }
+}
+
+@media (max-width: 480px) {
+    .archive-visual {
+        display: none;
+        /* Hide visual on small phones to save space */
+    }
+
+    .archive-card {
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .archive-form-area {
+        padding: 20px 10px;
+        background: transparent;
+        border-top: none;
+    }
+
+    body {
+        align-items: flex-start;
+        padding-top: 10vh;
+    }
+}
