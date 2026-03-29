@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sale | ClientSphere CRM</title>
+
+    <link
+        href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/add_sale.css' %}">
+
+    <style>
+        /* Basic styling to ensure the rows look aligned */
+        .product-item-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 15px;
+            background: #f9f9f9;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        .product-item-row select {
+            flex: 2;
+            padding: 8px;
+        }
+
+        .product-item-row input {
+            flex: 1;
+            padding: 8px;
+        }
+
+        .remove-btn {
+            background: #ff4d4d;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .add-more-btn {
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <h2>ClientSphere</h2>
+        <ul>
+            <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a></li>
+            <li><a href="{% url 'customers' %}"><i class="fa-solid fa-users"></i> <span>Customers</span></a></li>
+            <li><a href="{% url 'leads' %}"><i class="fa-solid fa-gem"></i> <span>Leads</span></a></li>
+            <li><a href="{% url 'add_sale' %}" class="active-link"><i class="fa-solid fa-cart-plus"></i> <span>Add
+                        Sale</span></a></li>
+            <li><a href="{% url 'sales_history' %}"><i class="fa-solid fa-book"></i><span>Sales History</span></a></li>
+            <li><a href="{% url 'reports' %}"><i class="fa-solid fa-chart-pie"></i> <span>Reports</span></a></li>
+            <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user-tie"></i> <span>Profile</span></a></li>
+            <li>
+                <form method="post" action="{% url 'logout' %}" style="width: 100%;">
+                    {% csrf_token %}
+                    <button type="submit"><i class="fa-solid fa-power-off"></i> <span>Logout</span></button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero-banner">
+            <header>
+                <h1>New Transaction</h1>
+            </header>
+        </section>
+
+        <div class="content-container">
+            <div class="form-card">
+                <h3>Record Sale</h3>
+
+                <form method="POST" id="sale-form">
+                    {% csrf_token %}
+
+                    <div class="form-group">
+                        <label>Select Customer</label>
+                        {{ sale_form.customer }}
+                    </div>
+
+                    <h4 class="section-divider">Line Items</h4>
+
+                    <div id="items-container"></div>
+
+                    <button type="button" class="add-more-btn" onclick="addRow()">
+                        <i class="fa-solid fa-plus"></i> Add Product
+                    </button>
+
+                    <hr style="margin: 20px 0; border: 0; border-top: 1px solid #eee;">
+
+                    <button type="submit" class="submit-btn">Save Sale Record</button>
+                    <a href="{% url 'sales_history' %}" class="cancel-link">Discard and return</a>
+                </form>
+            </div>
+        </div>
+
+        <div id="product-template" style="display:none;">
+            <div class="product-item-row" style="display: flex; gap: 10px; margin-bottom: 10px; align-items: center;">
+                <select name="product[]" required style="flex: 2; padding: 10px;">
+                    <option value="" disabled selected>Select Product</option>
+                    {% for product in products %}
+                    <option value="{{ product.id }}">{{ product.name }} - ₹{{ product.price }}</option>
+                    {% endfor %}
+                </select>
+                <input type="number" name="quantity[]" placeholder="Qty" min="1" required
+                    style="flex: 1; padding: 10px;">
+                <button type="button" class="remove-btn" onclick="removeRow(this)"
+                    style="background: #ff4d4d; color: white; border: none; padding: 10px; border-radius: 4px; cursor: pointer;">
+                    <i class="fa-solid fa-trash"></i>
+                </button>
+            </div>
+        </div>
+
+        <script>
+            const container = document.getElementById('items-container');
+            const templateRow = document.querySelector('#product-template .product-item-row');
+
+            function addRow() {
+                // Clone the template
+                const newRow = templateRow.cloneNode(true);
+                // Append to the active container
+                container.appendChild(newRow);
+            }
+
+            function removeRow(button) {
+                const rows = container.getElementsByClassName('product-item-row');
+                if (rows.length > 1) {
+                    button.closest('.product-item-row').remove();
+                } else {
+                    alert("At least one product is required for a sale.");
+                }
+            }
+
+            // Add the first row automatically on page load
+            window.onload = function () {
+                addRow();
+            }
+        </script>
+</body>
+
+</html>

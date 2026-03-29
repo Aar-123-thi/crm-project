@@ -1,0 +1,221 @@
+/* --- REPORT VARIABLES --- */
+:root {
+    --bg-canvas: #f7f3ed;
+    --sidebar-brown: #2c1e14;
+    --accent-gold: #c5a059;
+    --soft-cream: #ffffff;
+    --text-main: #3d2b1f;
+    --border-color: rgba(188, 160, 119, 0.2);
+}
+
+/* --- DOCUMENT LAYOUT --- */
+body {
+    font-family: 'Montserrat', sans-serif;
+    background-color: #e0ddd8; /* Slightly darker to contrast the "paper" */
+    color: var(--text-main);
+    margin: 0;
+    padding: 40px 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.report-wrapper {
+    background: var(--soft-cream);
+    width: 100%;
+    max-width: 850px; /* Standard A4-ish width */
+    padding: 60px;
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+    position: relative;
+    min-height: 100vh;
+}
+
+/* --- HEADER SECTION --- */
+.report-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.brand-logo {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 24px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--sidebar-brown);
+}
+
+.report-meta h1 {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 1.2rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 0;
+    color: var(--accent-gold);
+}
+
+.report-date {
+    font-size: 14px;
+    color: #888;
+    margin-top: 5px;
+}
+
+.gold-divider {
+    border: 0;
+    height: 1px;
+    background: var(--accent-gold);
+    margin-bottom: 40px;
+}
+
+/* --- CUSTOMER SECTIONS --- */
+.customer-section {
+    margin-bottom: 50px;
+}
+
+.customer-header {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+}
+
+.customer-header h3 {
+    font-family: 'Bodoni Moda', serif;
+    font-style: italic;
+    font-size: 1.4rem;
+    color: var(--sidebar-brown);
+}
+
+.sale-id {
+    font-size: 10px;
+    text-transform: uppercase;
+    color: #bbb;
+    letter-spacing: 1px;
+}
+
+/* --- TABLE STYLING --- */
+.item-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.item-table th {
+    text-align: left;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--accent-gold);
+    padding: 12px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.item-table td {
+    padding: 12px 0;
+    font-size: 13px;
+    border-bottom: 1px solid #fafafa;
+}
+
+.text-right {
+    text-align: right;
+}
+
+/* --- TOTAL BOX --- */
+.report-footer {
+    margin-top: 60px;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.total-box {
+    text-align: right;
+    border-top: 2px solid var(--sidebar-brown);
+    padding-top: 20px;
+    width: 280px;
+}
+
+.total-label {
+    display: block;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #888;
+    margin-bottom: 5px;
+}
+
+.total-value {
+    font-family: 'Bodoni Moda', serif;
+    font-size: 2.2rem;
+    color: var(--sidebar-brown);
+    font-weight: 700;
+}
+
+/* --- ACTION BUTTONS (Hidden in Print) --- */
+.action-container {
+    margin-top: 50px;
+    text-align: center;
+    border-top: 1px dashed var(--border-color);
+    padding-top: 30px;
+}
+
+.download-btn, .print-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    margin: 5px 10px;
+    font-family: 'Montserrat', sans-serif;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-decoration: none;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.3s ease;
+}
+
+.download-btn {
+    background: var(--sidebar-brown);
+    color: var(--accent-gold);
+    border: 1px solid var(--accent-gold);
+}
+
+.download-btn:hover {
+    background: var(--accent-gold);
+    color: white;
+}
+
+.print-btn {
+    background: transparent;
+    color: #666;
+    border: 1px solid #ccc;
+}
+
+.print-btn:hover {
+    background: #eee;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 25px;
+    font-size: 10px;
+    color: #999;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+/* --- PRINT RULES --- */
+@media print {
+    .action-container, .no-print {
+        display: none !important;
+    }
+    body {
+        background: white;
+        padding: 0;
+    }
+    .report-wrapper {
+        box-shadow: none;
+        padding: 0;
+        max-width: 100%;
+        min-height: auto;
+    }
+}

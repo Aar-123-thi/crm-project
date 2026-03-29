@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports & Analytics | ClientSphere</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/reports.css' %}">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body>
+
+<nav>
+    <h2>ClientSphere</h2>
+    <ul>
+        <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a></li>
+        <li><a href="{% url 'customers' %}"><i class="fa-solid fa-users"></i> <span>Customers</span></a></li>
+        <li><a href="{% url 'leads' %}"><i class="fa-solid fa-gem"></i> <span>Leads</span></a></li>
+
+        <!-- UPDATED -->
+<li><a href="{% url 'add_sale' %}"><i class="fa-solid fa-cart-plus"></i> <span>Add Sale</span></a></li>
+        <li><a href="{% url 'sales_history' %}"><i class="fa-solid fa-book"></i><span>Sales History</span></a></li>
+        <li><a href="{% url 'reports' %}" class="active-link"><i class="fa-solid fa-chart-pie"></i> <span>Reports</span></a></li>
+        <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user-tie"></i> <span>Profile</span></a></li>
+
+        <li>
+            <form method="post" action="{% url 'logout' %}">
+                {% csrf_token %}
+                <button type="submit"><i class="fa-solid fa-power-off"></i> <span>Logout</span></button>
+            </form>
+        </li>
+    </ul>
+</nav>
+
+<main>
+    <section class="hero-banner">
+        <header>
+            <h1>Analytical Insights</h1>
+        </header>
+    </section>
+
+    <div class="content-container">
+        <div class="dashboard-row">
+
+            <!-- CRM CHART -->
+            <div class="card">
+                <h4>CRM Overview</h4>
+                <canvas id="crmChart"></canvas>
+            </div>
+
+            <!-- LEAD CHART -->
+            <div class="card">
+                <h4>Lead Distribution</h4>
+                <canvas id="leadChart"></canvas>
+            </div>
+
+            <!-- SUMMARY -->
+            <div class="card full-width">
+                <h4>Summary Report</h4>
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Metric</th>
+                            <th style="text-align:right;">Value</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Total Customers</td>
+                            <td style="text-align:right;">{{ total_customers }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Leads</td>
+                            <td style="text-align:right;">{{ total_leads }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Sales</td>
+                            <td style="text-align:right;">{{ total_sales }}</td>
+                        </tr>
+                        <tr>
+                            <td>Total Revenue</td>
+                            <td style="text-align:right;">₹{{ total_revenue }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 🔥 DAILY PROFIT -->
+            <div class="card full-width">
+                <h4>Daily Profit Ledger</h4>
+
+                <table class="summary-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th style="text-align:right;">Revenue</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        {% for date, total in daily_data.items %}
+                        <tr>
+                            <td>
+                                <a href="{% url 'daily_report' date %}">
+                                    {{ date }}
+                                </a>
+                            </td>
+                            <td style="text-align:right;">
+                                ₹{{ total }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" style="text-align:center;">
+                                No sales data available
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- DATA FOR CHART -->
+<script type="application/json" id="crm-data">
+    [{{ total_customers|default:0 }}, {{ total_leads|default:0 }}, {{ total_sales|default:0 }}]
+</script>
+
+<script type="application/json" id="lead-data">
+    [{{ leads_new|default:0 }}, {{ leads_contacted|default:0 }}, {{ leads_converted|default:0 }}]
+</script>
+
+<script>
+    const crmData = JSON.parse(document.getElementById('crm-data').textContent);
+    const leadData = JSON.parse(document.getElementById('lead-data').textContent);
+
+    new Chart(document.getElementById('crmChart'), {
+        type: 'bar',
+        data: {
+            labels: ['Customers', 'Leads', 'Sales'],
+            datasets: [{
+                data: crmData,
+                backgroundColor: '#c5a059'
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { display: false } }
+        }
+    });
+
+    new Chart(document.getElementById('leadChart'), {
+        type: 'pie',
+        data: {
+            labels: ['New', 'Contacted', 'Converted'],
+            datasets: [{
+                data: leadData,
+                backgroundColor: ['#c5a059', '#2c1e14', '#5e483a']
+            }]
+        }
+    });
+</script>
+
+</body>
+</html>

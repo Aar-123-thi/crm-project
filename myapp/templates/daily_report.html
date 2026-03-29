@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Report | {{ date }}</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/daily_report.css' %}">
+    
+    <style>
+        /* Printing Fixes */
+        @media print {
+            .no-print, .action-container { display: none !important; }
+            .report-wrapper { box-shadow: none !important; margin: 0 !important; width: 100% !important; }
+        }
+        .text-right { text-align: right; }
+        .item-table th { border-bottom: 2px solid #eee; padding: 10px; color: #666; }
+        .item-table td { padding: 12px 10px; border-bottom: 1px solid #f9f9f9; }
+    </style>
+</head>
+<body>
+
+    <div class="report-wrapper">
+        <header class="report-header">
+            <div class="brand-logo">ClientSphere</div>
+            <div class="report-meta">
+                <h1>Daily Revenue Report</h1>
+                <p class="report-date">{{ date|date:"d M Y" }}</p>
+            </div>
+        </header>
+
+        <hr class="gold-divider">
+
+        <div class="report-body">
+            {% for sale in sales %}
+            <section class="customer-section">
+                <div class="customer-header">
+                    <h3>{{ sale.customer.name }}</h3>
+                    <span class="sale-id">Invoice Ref: #{{ sale.id }}</span>
+                </div>
+
+                <table class="item-table">
+                    <thead>
+                        <tr>
+                            <th>Product Description</th>
+                            <th>Unit Price</th>
+                            <th>Qty</th>
+                            <th class="text-right">Amount</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in sale.items.all %}
+                        <tr>
+                            <td>{{ item.product.name }}</td>
+                            
+                            <td>₹{{ item.product.price }}</td>
+                            
+                            <td>{{ item.quantity }}</td>
+                            
+                            <td class="text-right">₹{{ item.total_price }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </section>
+            {% empty %}
+            <div style="text-align: center; padding: 50px;">
+                <p>No transactions found for this date.</p>
+            </div>
+            {% endfor %}
+        </div>
+
+        <footer class="report-footer">
+            <div class="total-box">
+                <span class="total-label">Grand Total for Day</span>
+                <span class="total-value">₹{{ total }}</span>
+            </div>
+        </footer>
+
+        <div class="action-container no-print">
+            <a href="{% url 'download_daily_report' date %}" class="download-btn">
+                <i class="fa-solid fa-file-pdf"></i> Download PDF
+            </a>
+            
+            <button onclick="window.print()" class="print-btn">
+                <i class="fa-solid fa-print"></i> Print Copy
+            </button>
+            
+            <a href="{% url 'dashboard' %}" class="back-link">
+                <i class="fa-solid fa-arrow-left"></i> Dashboard
+            </a>
+        </div>
+    </div>
+
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Profile | ClientSphere CRM</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,wght@0,400;0,700;1,400&family=Montserrat:wght@200;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/sidebar.css' %}">
+    <link rel="stylesheet" href="{% static 'css/edit_customer.css' %}">
+
+</head>
+<body>
+
+    <nav>
+        <h2>ClientSphere</h2>
+        <ul>
+            <li><a href="{% url 'dashboard' %}"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a></li>
+            <li><a href="{% url 'customers' %}" class="active-link"><i class="fa-solid fa-users"></i> <span>Customers</span></a></li>
+            <li><a href="{% url 'leads' %}"><i class="fa-solid fa-gem"></i> <span>Leads</span></a></li>
+            <li><a href="{% url 'add_sale' %}"><i class="fa-solid fa-cart-plus"></i> <span>Add Sale</span></a></li>
+            <li><a href="{% url 'sales_history' %}"><i class="fa-solid fa-book"></i><span>Sales History</span></a></li>
+            <li><a href="{% url 'reports' %}"><i class="fa-solid fa-chart-pie"></i> <span>Reports</span></a></li>
+            <li><a href="{% url 'profile' %}"><i class="fa-solid fa-user-tie"></i> <span>Profile</span></a></li>
+            <li>
+                <form method="post" action="{% url 'logout' %}" style="width: 100%;">
+                    {% csrf_token %}
+                    <button type="submit"><i class="fa-solid fa-power-off"></i> <span>Logout</span></button>
+                </form>
+            </li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero-banner">
+            <header>
+                <h1>Modify Record</h1>
+            </header>
+        </section>
+
+        <div class="content-container">
+            <div class="form-card">
+                <h3>Update Customer Details</h3>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    
+                    <button type="submit" class="update-btn">Save Changes</button>
+                </form>
+                
+                <a href="{% url 'customers' %}" class="back-link">Cancel and go back</a>
+            </div>
+            
+            <div style="margin-top: 30px; width: 100%; max-width: 600px; text-align: left;">
+                <a href="{% url 'customers' %}" style="color: var(--accent-gold); text-decoration: none; font-size: 12px; display: inline-block;">
+                    <i class="fa-solid fa-chevron-left"></i> Return to Registry
+                </a>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>
